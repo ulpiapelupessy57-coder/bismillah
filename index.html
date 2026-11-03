@@ -1,0 +1,1880 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  BookOpen, Clock, Award, CheckCircle, AlertTriangle, UserCheck, 
+  FileText, LogOut, Search, Download, Printer, Settings, Key, 
+  HelpCircle, ChevronLeft, ChevronRight, BarChart2, PieChart, 
+  CheckCircle2, XCircle, RefreshCw, ShieldAlert, Users, Layers, Sparkles, Filter
+} from 'lucide-react';
+
+// ==========================================
+// 40 FULL SCIENTIFIC QUESTION BANK (KELAS X)
+// ==========================================
+const BANK_SOAL = [
+  // --- DOMAIN 1: BESARAN DAN SATUAN (10 SOAL) ---
+  {
+    id: 1,
+    domain: "Besaran dan Satuan",
+    difficulty: "Mudah",
+    question: "Manakah di bawah ini yang seluruhnya merupakan kelompok besaran pokok dalam Sistem Internasional (SI)?",
+    options: [
+      "A. Panjang, massa, waktu, kuat arus listrik, suhu, jumlah zat, intensitas cahaya",
+      "B. Panjang, massa, gaya, kecepatan, suhu, kuat arus, volume",
+      "C. Kecepatan, percepatan, gaya, usaha, daya, tekanan, momentum",
+      "D. Massa, volume, berat, suhu, waktu, luas, kuat arus",
+      "E. Panjang, luas, volume, kuat arus, energi, daya, massa jenis"
+    ],
+    answer: 0,
+    explanation: " Tujuh besaran pokok SI adalah Panjang (m), Massa (kg), Waktu (s), Suhu (K), Kuat Arus (A), Jumlah Zat (mol), dan Intensitas Cahaya (cd)."
+  },
+  {
+    id: 2,
+    domain: "Besaran dan Satuan",
+    difficulty: "Mudah",
+    question: "Satuan Internasional (SI) yang tepat untuk besaran suhu dan kuat arus listrik secara berurutan adalah...",
+    options: [
+      "A. Celcius dan Volt",
+      "B. Kelvin dan Ampere",
+      "C. Fahrenheit dan Ohm",
+      "D. Reamur dan Watt",
+      "E. Kelvin dan Coulomb"
+    ],
+    answer: 1,
+    explanation: "Dalam SI, satuan standar untuk suhu adalah Kelvin (K) dan kuat arus listrik adalah Ampere (A)."
+  },
+  {
+    id: 3,
+    domain: "Besaran dan Satuan",
+    difficulty: "Sedang",
+    question: "Sebuah mobil bergerak dengan kecepatan 90 km/jam. Jika kecepatan tersebut dikonversikan ke dalam Sistem Internasional (m/s), nilainya adalah...",
+    options: [
+      "A. 15 m/s",
+      "B. 20 m/s",
+      "C. 25 m/s",
+      "D. 30 m/s",
+      "E. 35 m/s"
+    ],
+    answer: 2,
+    explanation: "90 km/jam = (90 × 1000 m) / 3600 s = 90.000 / 3.600 = 25 m/s."
+  },
+  {
+    id: 4,
+    domain: "Besaran dan Satuan",
+    difficulty: "Sedang",
+    question: "Massa jenis air murni adalah 1 g/cm³. Jika dinyatakan dalam satuan SI (kg/m³), besarnya massa jenis air tersebut adalah...",
+    options: [
+      "A. 10 kg/m³",
+      "B. 100 kg/m³",
+      "C. 1.000 kg/m³",
+      "D. 10.000 kg/m³",
+      "E. 0,001 kg/m³"
+    ],
+    answer: 2,
+    explanation: "1 g/cm³ = (10⁻³ kg) / (10⁻⁶ m³) = 10³ kg/m³ = 1.000 kg/m³."
+  },
+  {
+    id: 5,
+    domain: "Besaran dan Satuan",
+    difficulty: "Mudah",
+    question: "Manakah dari kelompok besaran berikut yang seluruhnya merupakan besaran turunan?",
+    options: [
+      "A. Panjang, massa, waktu",
+      "B. Kecepatan, gaya, usaha",
+      "C. Suhu, jumlah zat, volume",
+      "D. Intensitas cahaya, luas, daya",
+      "E. Waktu, tekanan, massa jenis"
+    ],
+    answer: 1,
+    explanation: "Kecepatan (m/s), Gaya (N), dan Usaha (Joule) diturunkan dari besaran-besaran pokok."
+  },
+  {
+    id: 6,
+    domain: "Besaran dan Satuan",
+    difficulty: "Sedang",
+    question: "Besaran vektor adalah besaran yang memiliki nilai dan arah. Di antara besaran berikut, yang termasuk besaran vektor adalah...",
+    options: [
+      "A. Jarak, massa, energi",
+      "B. Perpindahan, kecepatan, gaya",
+      "C. Kelajuan, waktu, daya",
+      "D. Suhu, luas, volume",
+      "E. Tekanan, massa jenis, usaha"
+    ],
+    answer: 1,
+    explanation: "Perpindahan, kecepatan, dan gaya memiliki besar dan arah yang jelas (Vektor)."
+  },
+  {
+    id: 7,
+    domain: "Besaran dan Satuan",
+    difficulty: "Sedang",
+    question: "Konversikan nilai frekuensi gelombang 2,5 MHz (MegaHertz) ke dalam satuan Hertz (Hz)...",
+    options: [
+      "A. 2,5 × 10³ Hz",
+      "B. 2,5 × 10⁴ Hz",
+      "C. 2,5 × 10⁵ Hz",
+      "D. 2,5 × 10⁶ Hz",
+      "E. 2,5 × 10⁹ Hz"
+    ],
+    answer: 3,
+    explanation: "Awalan Mega (M) bernilai 10⁶, sehingga 2,5 MHz = 2,5 × 10⁶ Hz."
+  },
+  {
+    id: 8,
+    domain: "Besaran dan Satuan",
+    difficulty: "Mudah",
+    question: "Pasangan besaran dan satuan SI berikut yang BENAR adalah...",
+    options: [
+      "A. Gaya - Dyne",
+      "B. Usaha - Erg",
+      "C. Tekanan - Pascal (Pa)",
+      "D. Daya - Kalori",
+      "E. Massa - Gram"
+    ],
+    answer: 2,
+    explanation: "Tekanan memiliki satuan SI Pascal (Pa) atau N/m²."
+  },
+  {
+    id: 9,
+    domain: "Besaran dan Satuan",
+    difficulty: "Sulit",
+    question: "Sebuah tangki air berbentuk kubus memiliki panjang rusuk 2 meter. Volume air maksimum jika dinyatakan dalam liter adalah...",
+    options: [
+      "A. 200 liter",
+      "B. 800 liter",
+      "C. 2.000 liter",
+      "D. 8.000 liter",
+      "E. 16.000 liter"
+    ],
+    answer: 3,
+    explanation: "Volume kubus V = s³ = 2³ = 8 m³. Karena 1 m³ = 1.000 liter, maka 8 m³ = 8.000 liter."
+  },
+  {
+    id: 10,
+    domain: "Besaran dan Satuan",
+    difficulty: "Sedang",
+    question: "Dalam kehidupan sehari-hari, kita sering menggunakan istilah 'berat badan' 50 kg. Pernyataan fisika yang paling tepat mengenai hal tersebut adalah...",
+    options: [
+      "A. Pernyataan tersebut benar karena berat satuannya kg.",
+      "B. Pernyataan tersebut keliru, seharusnya yang diukur adalah massa dengan satuan kg.",
+      "C. Berat dan massa adalah besaran yang identik dan tidak ada bedanya.",
+      "D. Berat dipengaruhi oleh luas permukaan benda.",
+      "E. Massa benda selalu berubah tergantung percepatan gravitasi."
+    ],
+    answer: 1,
+    explanation: "Secara fisika, kg adalah satuan MASSA (tetap), sedangkan BERAT adalah gaya gravitasi (w = m.g) dengan satuan Newton."
+  },
+
+  // --- DOMAIN 2: ANGKA PENTING (10 SOAL) ---
+  {
+    id: 11,
+    domain: "Angka Penting",
+    difficulty: "Mudah",
+    question: "Berapakah jumlah angka penting dari hasil pengukuran 0,004050 meter?",
+    options: [
+      "A. 3 angka penting",
+      "B. 4 angka penting",
+      "C. 5 angka penting",
+      "D. 6 angka penting",
+      "E. 7 angka penting"
+    ],
+    answer: 1,
+    explanation: "Angka nol di sebelah kiri angka bukan nol pertama bukan AP. Angka 4, 0, 5, dan 0 (nol di kanan setelah desimal) adalah AP. Total = 4 AP (4, 0, 5, 0)."
+  },
+  {
+    id: 12,
+    domain: "Angka Penting",
+    difficulty: "Sedang",
+    question: "Hasil penjumlahan dari 12,45 cm + 2,3 cm menurut aturan angka penting adalah...",
+    options: [
+      "A. 14,75 cm",
+      "B. 14,8 cm",
+      "C. 14,7 cm",
+      "D. 15,0 cm",
+      "E. 14,750 cm"
+    ],
+    answer: 1,
+    explanation: "12,45 (2 angka di belakang koma) + 2,3 (1 angka di belakang koma) = 14,75. Menurut aturan penjumlahan AP, hasilnya mengikuti desimal paling sedikit (1 desimal), dibulatkan menjadi 14,8 cm."
+  },
+  {
+    id: 13,
+    domain: "Angka Penting",
+    difficulty: "Sedang",
+    question: "Sebuah persegi panjang memiliki panjang 5,25 cm dan lebar 2,1 cm. Luas persegi panjang tersebut berdasarkan aturan angka penting adalah...",
+    options: [
+      "A. 11,025 cm²",
+      "B. 11,03 cm²",
+      "C. 11,0 cm²",
+      "D. 11 cm²",
+      "E. 11,02 cm²"
+    ],
+    answer: 3,
+    explanation: "5,25 (3 AP) × 2,1 (2 AP) = 11,025. Hasil perkalian harus memiliki AP sebanyak AP terkecil yaitu 2 AP. Jadi dibulatkan menjadi 11 cm²."
+  },
+  {
+    id: 14,
+    domain: "Angka Penting",
+    difficulty: "Mudah",
+    question: "Penulisan notasi ilmiah yang tepat untuk nilai 0,0000000385 meter adalah...",
+    options: [
+      "A. 38,5 × 10⁻⁸ m",
+      "B. 3,85 × 10⁻⁸ m",
+      "C. 3,85 × 10⁻⁷ m",
+      "D. 0,385 × 10⁻⁷ m",
+      "E. 3,85 × 10⁸ m"
+    ],
+    answer: 1,
+    explanation: "Format notasi ilmiah: a × 10ⁿ di mana 1 ≤ a < 10. Menggeser koma 8 kali ke kanan: 3,85 × 10⁻⁸ m."
+  },
+  {
+    id: 15,
+    domain: "Angka Penting",
+    difficulty: "Mudah",
+    question: "Berdasarkan aturan angka penting, jumlah angka penting pada bilangan 50.000 Volt yang dituliskan sebagai 5,00 × 10⁴ Volt adalah...",
+    options: [
+      "A. 1 angka penting",
+      "B. 2 angka penting",
+      "C. 3 angka penting",
+      "D. 4 angka penting",
+      "E. 5 angka penting"
+    ],
+    answer: 2,
+    explanation: "Pada 5,00 × 10⁴, bagian eksponen tidak diperhitungkan. Angka 5, 0, 0 terdiri dari 3 Angka Penting."
+  },
+  {
+    id: 16,
+    domain: "Angka Penting",
+    difficulty: "Sedang",
+    question: "Seorang siswa mengukur massa 15 kelereng identik, di mana massa 1 kelereng adalah 12,43 gram. Massa total 15 kelereng menurut aturan angka penting adalah... (Catatan: 15 adalah angka eksak)",
+    options: [
+      "A. 186,45 gram",
+      "B. 186,5 gram",
+      "C. 186 gram",
+      "D. 186,450 gram",
+      "E. 190 gram"
+    ],
+    answer: 0,
+    explanation: "Perkalian antara bilangan penting (12,43 - 4 AP) dengan bilangan eksak (15) menghasilkan bilangan penting dengan jumlah AP yang sama dengan bilangan penting semula (4 AP). 12,43 × 15 = 186,45 gram (4 AP)."
+  },
+  {
+    id: 17,
+    domain: "Angka Penting",
+    difficulty: "Sedang",
+    question: "Hasil pengurangan angka penting 45,381 kg - 1,2 kg adalah...",
+    options: [
+      "A. 44,181 kg",
+      "B. 44,18 kg",
+      "C. 44,2 kg",
+      "D. 44,1 kg",
+      "E. 44 kg"
+    ],
+    answer: 2,
+    explanation: "45,381 (3 desimal) - 1,2 (1 desimal) = 44,181 -> dibulatkan menjadi 1 desimal = 44,2 kg."
+  },
+  {
+    id: 18,
+    domain: "Angka Penting",
+    difficulty: "Sulit",
+    question: "Panjang rusuk suatu kubus adalah 2,5 cm. Volume kubus tersebut menurut aturan angka penting adalah...",
+    options: [
+      "A. 15,625 cm³",
+      "B. 15,63 cm³",
+      "C. 15,6 cm³",
+      "D. 16 cm³",
+      "E. 15 cm³"
+    ],
+    answer: 3,
+    explanation: "V = (2,5 cm)³ = 15,625 cm³. Karena 2,5 memiliki 2 AP, maka volume dibulatkan menjadi 2 AP, yaitu 16 cm³."
+  },
+  {
+    id: 19,
+    domain: "Angka Penting",
+    difficulty: "Mudah",
+    question: "Aturan pembulatan angka penting menyatakan bahwa jika angka terakhir yang dibuang adalah 5 dan didahului angka genap, maka...",
+    options: [
+      "A. Dibulatkan ke atas",
+      "B. Angka genap tersebut tetap (tidak berubah)",
+      "C. Ditambah dua",
+      "D. Dikurangi satu",
+      "E. Selalu ditambah satu"
+    ],
+    answer: 1,
+    explanation: "Jika angka paling kanan yang dibuang tepat 5 dan angka sebelumnya genap, angka genap tersebut TETAP. Jika ganjil, dibulatkan ke atas."
+  },
+  {
+    id: 20,
+    domain: "Angka Penting",
+    difficulty: "Sulit",
+    question: "Akar pangkat dua dari √625,0 menurut aturan angka penting adalah...",
+    options: [
+      "A. 25",
+      "B. 25,0",
+      "C. 25,00",
+      "D. 25,000",
+      "E. 0,25 × 10²"
+    ],
+    answer: 1,
+    explanation: "√625,0 (4 AP) = 25. Hasil penarikan akar harus memiliki AP sebanyak AP pada bilangan asli. 25,0 memiliki 3/4 penyesuaian AP baku (25,00 = 4 AP). Secara standar, 25,00 mewakili 4 AP."
+  },
+
+  // --- DOMAIN 3: PENGUKURAN (10 SOAL) ---
+  {
+    id: 21,
+    domain: "Pengukuran",
+    difficulty: "Mudah",
+    question: "Alat ukur yang paling tepat dan memiliki tingkat ketelitian tertinggi untuk mengukur diameter luar pipa kecil atau ketebalan plat tipis adalah...",
+    options: [
+      "A. Mistar Plastik",
+      "B. Jangka Sorong",
+      "C. Mikrometer Sekrup",
+      "D. Roll Meter",
+      "E. Meteran Pita"
+    ],
+    answer: 2,
+    explanation: "Mikrometer sekrup memiliki tingkat ketelitian terkecil (0,01 mm), sangat presisi untuk mengukur ketebalan keping tipis/diameter kecil."
+  },
+  {
+    id: 22,
+    domain: "Pengukuran",
+    difficulty: "Sedang",
+    question: "Ketelitian (skala terkecil) dari mistar, jangka sorong, dan mikrometer sekrup berturut-turut adalah...",
+    options: [
+      "A. 1 mm ; 0,1 mm ; 0,01 mm",
+      "B. 0,1 mm ; 0,01 mm ; 0,001 mm",
+      "C. 1 cm ; 1 mm ; 0,1 mm",
+      "D. 0,5 mm ; 0,05 mm ; 0,005 mm",
+      "E. 1 m ; 1 cm ; 1 mm"
+    ],
+    answer: 0,
+    explanation: "Mistar = 1 mm (0,1 cm); Jangka sorong umum = 0,1 mm (0,01 cm); Mikrometer sekrup = 0,01 mm."
+  },
+  {
+    id: 23,
+    domain: "Pengukuran",
+    difficulty: "Sedang",
+    question: "Hasil pembacaan Jangka Sorong di mana skala utama menunjukkan 3,4 cm dan garis nonius yang berimpit tegak lurus dengan skala utama adalah garis ke-7 (ketelitian 0,01 cm) adalah...",
+    options: [
+      "A. 3,47 cm",
+      "B. 3,40 cm",
+      "C. 4,10 cm",
+      "D. 3,74 cm",
+      "E. 3,57 cm"
+    ],
+    answer: 0,
+    explanation: "Hasil = Skala Utama + (Skala Nonius × Ketelitian) = 3,4 cm + (7 × 0,01 cm) = 3,47 cm."
+  },
+  {
+    id: 24,
+    domain: "Pengukuran",
+    difficulty: "Sedang",
+    question: "Pada Mikrometer Sekrup, jika skala utama menunjukkan angka 6,5 mm dan pada skala putar (nonius) garis yang berimpit adalah angka 28, maka hasil pengukurannya adalah...",
+    options: [
+      "A. 6,78 mm",
+      "B. 6,28 mm",
+      "C. 9,30 mm",
+      "D. 6,528 mm",
+      "E. 6,80 mm"
+    ],
+    answer: 0,
+    explanation: "Hasil = Skala Utama + (Skala Putar × 0,01 mm) = 6,5 mm + (28 × 0,01 mm) = 6,5 + 0,28 = 6,78 mm."
+  },
+  {
+    id: 25,
+    domain: "Pengukuran",
+    difficulty: "Mudah",
+    question: "Alat yang digunakan untuk mengukur massa suatu benda dengan cara membandingkan beban pada lengan neraca adalah...",
+    options: [
+      "A. Dinamometer",
+      "B. Neraca Ohauss",
+      "C. Barometer",
+      "D. Manometer",
+      "E. Hydrometer"
+    ],
+    answer: 1,
+    explanation: "Neraca Ohauss (neraca lengan) digunakan di laboratorium fisika untuk mengukur massa benda."
+  },
+  {
+    id: 26,
+    domain: "Pengukuran",
+    difficulty: "Sedang",
+    question: "Ketidakpastian mutlak (Δx) pada pengukuran tunggal menggunakan alat ukur dengan skala terkecil (NST) dinilai sebesar...",
+    options: [
+      "A. 1 × NST",
+      "B. ½ × NST",
+      "C. ⅓ × NST",
+      "D. 2 × NST",
+      "E. ¼ × NST"
+    ],
+    answer: 1,
+    explanation: "Ketidakpastian mutlak pengukuran tunggal dirumuskan sebagai Δx = ½ × Skala Terkecil (NST)."
+  },
+  {
+    id: 27,
+    domain: "Pengukuran",
+    difficulty: "Sulit",
+    question: "Hasil pengukuran panjang sebuah pensil menggunakan mistar (NST = 1 mm) dilaporkan sebagai (15,4 ± 0,05) cm. Nilai ketidakpastian relatif pengukuran tersebut adalah sekitar...",
+    options: [
+      "A. 0,32 %",
+      "B. 0,05 %",
+      "C. 1,5 %",
+      "D. 3,2 %",
+      "E. 5,0 %"
+    ],
+    answer: 0,
+    explanation: "Ketidakpastian Relatif = (Δx / x) × 100% = (0,05 / 15,4) × 100% ≈ 0,32%."
+  },
+  {
+    id: 28,
+    domain: "Pengukuran",
+    difficulty: "Mudah",
+    question: "Kesalahan sistematis dalam pengukuran dapat disebabkan oleh hal-hal berikut, KECUALI...",
+    options: [
+      "A. Kesalahan kalibrasi alat ukur",
+      "B. Kesalahan titik nol (zero error)",
+      "C. Kelelahan atau fluktuasi halus tegangan listrik (kesalahan acak)",
+      "D. Gesekan pada poros alat ukur",
+      "E. Kerusakan pegas alat ukur"
+    ],
+    answer: 2,
+    explanation: "Fluktuasi lingkungan/tegangan acak termasuk Kesalahan Acak (Random Error), bukan kesalahan sistematis."
+  },
+  {
+    id: 29,
+    domain: "Pengukuran",
+    difficulty: "Sedang",
+    question: "Posisi mata pengamat yang tidak tegak lurus terhadap skala alat ukur saat membaca hasil pengukuran akan menimbulkan kesalahan pengamatan yang disebut...",
+    options: [
+      "A. Paraksial",
+      "B. Paralaks",
+      "C. Kalibrasi",
+      "D. Refraksi",
+      "E. Resolusi"
+    ],
+    answer: 1,
+    explanation: "Kesalahan sudut pandang pengamatan dinamakan kesalahan paralaks (parallax error)."
+  },
+  {
+    id: 30,
+    domain: "Pengukuran",
+    difficulty: "Sulit",
+    question: "Seorang siswa mengukur diameter kelereng 5 kali berturut-turut: 12,5 mm, 12,6 mm, 12,5 mm, 12,4 mm, dan 12,5 mm. Nilai rata-rata dari pengukuran tersebut adalah...",
+    options: [
+      "A. 12,50 mm",
+      "B. 12,52 mm",
+      "C. 12,48 mm",
+      "D. 12,60 mm",
+      "E. 12,40 mm"
+    ],
+    answer: 0,
+    explanation: "Rata-rata = (12,5 + 12,6 + 12,5 + 12,4 + 12,5) / 5 = 62,5 / 5 = 12,50 mm."
+  },
+
+  // --- DOMAIN 4: DIMENSI BESARAN (10 SOAL) ---
+  {
+    id: 31,
+    domain: "Dimensi Besaran",
+    difficulty: "Mudah",
+    question: "Lambang dimensi untuk besaran pokok Massa, Panjang, dan Waktu secara berurutan adalah...",
+    options: [
+      "A. [M], [L], [T]",
+      "B. [L], [M], [T]",
+      "C. [T], [L], [M]",
+      "D. [M], [T], [L]",
+      "E. [I], [N], [J]"
+    ],
+    answer: 0,
+    explanation: "Massa = Mass [M], Panjang = Length [L], Waktu = Time [T]."
+  },
+  {
+    id: 32,
+    domain: "Dimensi Besaran",
+    difficulty: "Mudah",
+    question: "Dimensi dari besaran kecepatan (v = s/t) adalah...",
+    options: [
+      "A. [L] [T]⁻¹",
+      "B. [L] [T]⁻²",
+      "C. [M] [L] [T]⁻¹",
+      "D. [L]² [T]⁻¹",
+      "E. [M] [T]⁻¹"
+    ],
+    answer: 0,
+    explanation: "Kecepatan v = m/s -> [L] / [T] = [L][T]⁻¹."
+  },
+  {
+    id: 33,
+    domain: "Dimensi Besaran",
+    difficulty: "Sedang",
+    question: "Gaya dirumuskan sebagai perkalian massa dengan percepatan (F = m × a). Dimensi dari gaya adalah...",
+    options: [
+      "A. [M] [L] [T]⁻¹",
+      "B. [M] [L] [T]⁻²",
+      "C. [M] [L]² [T]⁻²",
+      "D. [M] [L]⁻¹ [T]⁻²",
+      "E. [M]² [L] [T]⁻²"
+    ],
+    answer: 1,
+    explanation: "F = m (kg) × a (m/s²) = kg m s⁻² -> [M][L][T]⁻²."
+  },
+  {
+    id: 34,
+    domain: "Dimensi Besaran",
+    difficulty: "Sedang",
+    question: "Usaha (W = F × s) dan Energi Kinetik (Ek = ½ m v²) memiliki dimensi yang sama yaitu...",
+    options: [
+      "A. [M] [L] [T]⁻²",
+      "B. [M] [L]² [T]⁻²",
+      "C. [M] [L]² [T]⁻¹",
+      "D. [M] [L]⁻¹ [T]⁻²",
+      "E. [M] [L]³ [T]⁻²"
+    ],
+    answer: 1,
+    explanation: "Usaha = Gaya × Jarak = ([M][L][T]⁻²) × [L] = [M][L]²[T]⁻²."
+  },
+  {
+    id: 35,
+    domain: "Dimensi Besaran",
+    difficulty: "Sedang",
+    question: "Dimensi dari besaran Tekanan (P = F / A) adalah...",
+    options: [
+      "A. [M] [L]⁻¹ [T]⁻²",
+      "B. [M] [L]⁻² [T]⁻²",
+      "C. [M] [L] [T]⁻²",
+      "D. [M] [L]² [T]⁻³",
+      "E. [M] [L]⁻³ [T]⁻¹"
+    ],
+    answer: 0,
+    explanation: "P = Gaya / Luas = ([M][L][T]⁻²) / [L]² = [M][L]⁻¹[T]⁻²."
+  },
+  {
+    id: 36,
+    domain: "Dimensi Besaran",
+    difficulty: "Sedang",
+    question: "Daya didefinisikan sebagai Usaha per satuan waktu (P = W / t). Dimensi daya yang tepat adalah...",
+    options: [
+      "A. [M] [L]² [T]⁻²",
+      "B. [M] [L]² [T]⁻³",
+      "C. [M] [L] [T]⁻³",
+      "D. [M] [L]⁻² [T]⁻³",
+      "E. [M]² [L]² [T]⁻²"
+    ],
+    answer: 1,
+    explanation: "Daya = W / t = ([M][L]²[T]⁻²) / [T] = [M][L]²[T]⁻³."
+  },
+  {
+    id: 37,
+    domain: "Dimensi Besaran",
+    difficulty: "Sulit",
+    question: "Besaran fisika yang memiliki dimensi [M] [L]⁻³ adalah...",
+    options: [
+      "A. Tekanan",
+      "B. Massa Jenis",
+      "C. Gaya",
+      "D. Momentum",
+      "E. Impuls"
+    ],
+    answer: 1,
+    explanation: "Massa jenis ρ = m / V = kg / m³ -> [M] [L]⁻³."
+  },
+  {
+    id: 38,
+    domain: "Dimensi Besaran",
+    difficulty: "Sulit",
+    question: "Dua besaran fisika berikut yang memiliki dimensi YANG SAMA adalah...",
+    options: [
+      "A. Gaya dan Usaha",
+      "B. Kecepatan dan Percepatan",
+      "C. Impuls dan Momentum",
+      "D. Usaha dan Daya",
+      "E. Tekanan dan Gaya"
+    ],
+    answer: 2,
+    explanation: "Impuls (F.Δt) dan Momentum (m.v) keduanya berdimensi [M][L][T]⁻¹ (satuan N.s atau kg.m/s)."
+  },
+  {
+    id: 39,
+    domain: "Dimensi Besaran",
+    difficulty: "Sulit",
+    question: "Persamaan perpindahan s = v₀·t + ½ a·t² dapat diuji kebenarannya menggunakan analisis dimensi. Dimensi dari suku (½ a·t²) adalah...",
+    options: [
+      "A. [L] [T]",
+      "B. [L] [T]⁻¹",
+      "C. [L]",
+      "D. [L]²",
+      "E. [T]"
+    ],
+    answer: 2,
+    explanation: "a·t² = (m/s²) × s² = meter -> Berdimensi [L]. Sama dengan dimensi perpindahan (s)."
+  },
+  {
+    id: 40,
+    domain: "Dimensi Besaran",
+    difficulty: "Sulit",
+    question: "Konstanta gravitasi umum (G) terdapat pada rumus F = G (m₁ m₂ / r²). Dimensi dari konstanta G adalah...",
+    options: [
+      "A. [M]⁻¹ [L]³ [T]⁻²",
+      "B. [M] [L]³ [T]⁻²",
+      "C. [M]⁻² [L]² [T]⁻¹",
+      "D. [M]⁻¹ [L]² [T]⁻²",
+      "E. [M] [L]² [T]⁻²"
+    ],
+    answer: 0,
+    explanation: "G = F·r² / (m₁·m₂) = (kg·m·s⁻² · m²) / kg² = kg⁻¹·m³·s⁻² -> [M]⁻¹ [L]³ [T]⁻²."
+  }
+];
+
+// Initial State helper
+const DEFAULT_TOKEN = "PHYS10X";
+const DEFAULT_KKTP = 75;
+
+export default function App() {
+  // Navigation & Screen View State
+  // Views: 'landing', 'rules', 'exam', 'result', 'teacher_login', 'teacher_dashboard'
+  const [currentScreen, setCurrentScreen] = useState('landing');
+  
+  // App Configurations & Admin controls
+  const [activeToken, setActiveToken] = useState(DEFAULT_TOKEN);
+  const [kktpScore, setKktpScore] = useState(DEFAULT_KKTP);
+  const [isExamActive, setIsExamActive] = useState(true);
+  const [allowReviewKey, setAllowReviewKey] = useState(false);
+
+  // Student Identity State
+  const [studentInfo, setStudentInfo] = useState({
+    name: '',
+    className: 'X-1',
+    absentNo: '',
+    tokenInput: ''
+  });
+  const [loginError, setLoginError] = useState('');
+
+  // Exam Progress State
+  const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
+  const [answers, setAnswers] = useState({}); // { 1: 0, 2: 3, ... }
+  const [flagged, setFlagged] = useState({}); // { 1: true }
+  const [timeLeft, setTimeLeft] = useState(90 * 60); // 90 minutes in seconds
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [examSubmittedTime, setExamSubmittedTime] = useState(null);
+
+  // Completed Submissions Database (Simulated Server DB)
+  const [completedExams, setCompletedExams] = useState([
+    {
+      id: "EX-101",
+      name: "Ahmad Tehoru",
+      className: "X-1",
+      absentNo: "03",
+      score: 87.5,
+      correctCount: 35,
+      wrongCount: 5,
+      unansweredCount: 0,
+      predikat: "Baik",
+      timestamp: "2026-11-03 08:30",
+      timeSpent: "74 Menit",
+      domainScores: { "Besaran dan Satuan": 90, "Angka Penting": 80, "Pengukuran": 90, "Dimensi Besaran": 90 }
+    },
+    {
+      id: "EX-102",
+      name: "Siti Rahma Laha",
+      className: "X-1",
+      absentNo: "14",
+      score: 95.0,
+      correctCount: 38,
+      wrongCount: 2,
+      unansweredCount: 0,
+      predikat: "Sangat Baik",
+      timestamp: "2026-11-03 08:45",
+      timeSpent: "68 Menit",
+      domainScores: { "Besaran dan Satuan": 100, "Angka Penting": 90, "Pengukuran": 100, "Dimensi Besaran": 90 }
+    },
+    {
+      id: "EX-103",
+      name: "Budi Santoso",
+      className: "X-2",
+      absentNo: "08",
+      score: 65.0,
+      correctCount: 26,
+      wrongCount: 14,
+      unansweredCount: 0,
+      predikat: "Perlu Bimbingan",
+      timestamp: "2026-11-03 09:10",
+      timeSpent: "89 Menit",
+      domainScores: { "Besaran dan Satuan": 70, "Angka Penting": 50, "Pengukuran": 60, "Dimensi Besaran": 80 }
+    },
+    {
+      id: "EX-104",
+      name: "Nurul Aini",
+      className: "X-3",
+      absentNo: "21",
+      score: 77.5,
+      correctCount: 31,
+      wrongCount: 9,
+      unansweredCount: 0,
+      predikat: "Cukup",
+      timestamp: "2026-11-03 09:15",
+      timeSpent: "82 Menit",
+      domainScores: { "Besaran dan Satuan": 80, "Angka Penting": 70, "Pengukuran": 80, "Dimensi Besaran": 80 }
+    }
+  ]);
+
+  // Teacher Login State
+  const [teacherPin, setTeacherPin] = useState('');
+  const [teacherAuthError, setTeacherAuthError] = useState('');
+
+  // LocalStorage state restore effect
+  useEffect(() => {
+    const savedState = localStorage.getItem('PHYSICS_CBT_SESSION');
+    if (savedState) {
+      try {
+        const parsed = JSON.parse(savedState);
+        if (parsed.inProgress) {
+          setStudentInfo(parsed.studentInfo);
+          setAnswers(parsed.answers || {});
+          setFlagged(parsed.flagged || {});
+          setTimeLeft(parsed.timeLeft);
+          setCurrentScreen('exam');
+          setIsTimerRunning(true);
+        }
+      } catch (e) {
+        console.error("Failed to restore session", e);
+      }
+    }
+  }, []);
+
+  // Timer Tick Hook
+  useEffect(() => {
+    let timer = null;
+    if (isTimerRunning && currentScreen === 'exam') {
+      timer = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            handleAutoSubmit();
+            return 0;
+          }
+          // Save backup state every 5 seconds
+          if (prev % 5 === 0) {
+            localStorage.setItem('PHYSICS_CBT_SESSION', JSON.stringify({
+              inProgress: true,
+              studentInfo,
+              answers,
+              flagged,
+              timeLeft: prev - 1
+            }));
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isTimerRunning, currentScreen, studentInfo, answers, flagged]);
+
+  // Handle Auto Submit when time reaches zero
+  const handleAutoSubmit = () => {
+    setIsTimerRunning(false);
+    calculateAndFinishExam();
+  };
+
+  // Student Validation & Rules Step
+  const handleStudentLoginSubmit = (e) => {
+    e.preventDefault();
+    setLoginError('');
+
+    if (!studentInfo.name.trim() || !studentInfo.absentNo.trim()) {
+      setLoginError('Harap isi Nama Lengkap dan Nomor Absen secara lengkap.');
+      return;
+    }
+
+    if (studentInfo.tokenInput.trim().toUpperCase() !== activeToken.toUpperCase()) {
+      setLoginError(`Token ujian tidak valid! Minta token terbaru ke Pak Yusfyani Rahawarin.`);
+      return;
+    }
+
+    if (!isExamActive) {
+      setLoginError('Ujian saat ini sedang dinonaktifkan oleh Guru.');
+      return;
+    }
+
+    // Check duplicate student
+    const alreadyTaken = completedExams.find(
+      x => x.name.toLowerCase() === studentInfo.name.trim().toLowerCase() && x.className === studentInfo.className
+    );
+    if (alreadyTaken) {
+      setLoginError('Identitas peserta ini telah menyelesaikan ujian. Pengiriman ganda ditolak.');
+      return;
+    }
+
+    // Proceed to Rules screen
+    setCurrentScreen('rules');
+  };
+
+  // Start Actual Exam
+  const handleStartExam = () => {
+    setCurrentScreen('exam');
+    setIsTimerRunning(true);
+    setTimeLeft(90 * 60);
+  };
+
+  // Answer Select Handler
+  const handleSelectOption = (qId, optionIdx) => {
+    setAnswers(prev => ({ ...prev, [qId]: optionIdx }));
+  };
+
+  // Toggle Flag
+  const handleToggleFlag = (qId) => {
+    setFlagged(prev => ({ ...prev, [qId]: !prev[qId] }));
+  };
+
+  // Final Exam Grading & Submission
+  const calculateAndFinishExam = () => {
+    localStorage.removeItem('PHYSICS_CBT_SESSION');
+    setIsTimerRunning(false);
+
+    let correctCount = 0;
+    let wrongCount = 0;
+    let unansweredCount = 0;
+
+    const domainCorrectMap = {
+      "Besaran dan Satuan": 0,
+      "Angka Penting": 0,
+      "Pengukuran": 0,
+      "Dimensi Besaran": 0
+    };
+
+    BANK_SOAL.forEach(q => {
+      const selected = answers[q.id];
+      if (selected === undefined) {
+        unansweredCount++;
+      } else if (selected === q.answer) {
+        correctCount++;
+        domainCorrectMap[q.domain] = (domainCorrectMap[q.domain] || 0) + 1;
+      } else {
+        wrongCount++;
+      }
+    });
+
+    const finalScore = (correctCount / 40) * 100;
+    
+    let predikat = "Perlu Bimbingan";
+    if (finalScore >= 90) predikat = "Sangat Baik";
+    else if (finalScore >= 80) predikat = "Baik";
+    else if (finalScore >= 70) predikat = "Cukup";
+
+    const now = new Date();
+    const timestampStr = `${now.getFullYear()}-${(now.getMonth()+1).toString().padStart(2,'0')}-${now.getDate().toString().padStart(2,'0')} ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+    const minutesUsed = Math.ceil((90 * 60 - timeLeft) / 60);
+
+    const domainScoresPercent = {
+      "Besaran dan Satuan": (domainCorrectMap["Besaran dan Satuan"] / 10) * 100,
+      "Angka Penting": (domainCorrectMap["Angka Penting"] / 10) * 100,
+      "Pengukuran": (domainCorrectMap["Pengukuran"] / 10) * 100,
+      "Dimensi Besaran": (domainCorrectMap["Dimensi Besaran"] / 10) * 100
+    };
+
+    const newResultRecord = {
+      id: `EX-${Date.now().toString().slice(-4)}`,
+      name: studentInfo.name,
+      className: studentInfo.className,
+      absentNo: studentInfo.absentNo,
+      score: finalScore,
+      correctCount,
+      wrongCount,
+      unansweredCount,
+      predikat,
+      timestamp: timestampStr,
+      timeSpent: `${minutesUsed} Menit`,
+      domainScores: domainScoresPercent,
+      userAnswers: answers
+    };
+
+    setExamSubmittedTime(newResultRecord);
+    setCompletedExams(prev => [newResultRecord, ...prev]);
+    setCurrentScreen('result');
+    setShowSubmitModal(false);
+  };
+
+  // Teacher Login Handler
+  const handleTeacherAuth = (e) => {
+    e.preventDefault();
+    if (teacherPin === 'guru123' || teacherPin === 'admin') {
+      setCurrentScreen('teacher_dashboard');
+      setTeacherAuthError('');
+      setTeacherPin('');
+    } else {
+      setTeacherAuthError('PIN Guru Salah! Gunakan kata sandi yang valid (Default: guru123)');
+    }
+  };
+
+  // Time Formatting Utility
+  const formatTime = (secs) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
+  // Computed Analytical Metrics for Teacher Dashboard
+  const analyticsData = useMemo(() => {
+    const totalCount = completedExams.length;
+    if (totalCount === 0) {
+      return {
+        avgScore: 0, highest: 0, lowest: 0, passedCount: 0, failedCount: 0,
+        domainAverages: { "Besaran dan Satuan": 0, "Angka Penting": 0, "Pengukuran": 0, "Dimensi Besaran": 0 },
+        hardestQuestions: []
+      };
+    }
+
+    const scores = completedExams.map(x => x.score);
+    const avgScore = (scores.reduce((a, b) => a + b, 0) / totalCount).toFixed(1);
+    const highest = Math.max(...scores).toFixed(1);
+    const lowest = Math.min(...scores).toFixed(1);
+    const passedCount = completedExams.filter(x => x.score >= kktpScore).length;
+    const failedCount = totalCount - passedCount;
+
+    // Calculate Domain Averages
+    const domainTotals = { "Besaran dan Satuan": 0, "Angka Penting": 0, "Pengukuran": 0, "Dimensi Besaran": 0 };
+    completedExams.forEach(item => {
+      if (item.domainScores) {
+        Object.keys(domainTotals).forEach(key => {
+          domainTotals[key] += (item.domainScores[key] || 0);
+        });
+      }
+    });
+
+    const domainAverages = {
+      "Besaran dan Satuan": (domainTotals["Besaran dan Satuan"] / totalCount).toFixed(1),
+      "Angka Penting": (domainTotals["Angka Penting"] / totalCount).toFixed(1),
+      "Pengukuran": (domainTotals["Pengukuran"] / totalCount).toFixed(1),
+      "Dimensi Besaran": (domainTotals["Dimensi Besaran"] / totalCount).toFixed(1)
+    };
+
+    return { avgScore, highest, lowest, passedCount, failedCount, domainAverages };
+  }, [completedExams, kktpScore]);
+
+  // Export CSV Function
+  const exportToCSV = () => {
+    let csvStr = "ID,Nama Lengkap,Kelas,No Absen,Nilai Akhir,Predikat,Benar,Salah,Kosong,Waktu Pengerjaan,Tanggal\n";
+    completedExams.forEach(r => {
+      csvStr += `"${r.id}","${r.name}","${r.className}","${r.absentNo}",${r.score},"${r.predikat}",${r.correctCount},${r.wrongCount},${r.unansweredCount},"${r.timeSpent}","${r.timestamp}"\n`;
+    });
+
+    const blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Rekap_Nilai_Fisika_X_Alhilaal_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  // Render Component Views
+  return (
+    <div className="min-h-screen bg-slate-900 text-slate-100 font-sans flex flex-col selection:bg-sky-500 selection:text-white">
+      {/* GLOBAL HEADER BAR */}
+      <header className="bg-slate-950 border-b border-slate-800 sticky top-0 z-40 shadow-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setCurrentScreen('landing')}>
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+              <Sparkles className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-slate-200 to-sky-400 bg-clip-text text-transparent">
+                PHYSICS CBT
+              </span>
+              <span className="block text-[10px] uppercase tracking-widest text-sky-400 font-semibold -mt-1">
+                SMAS Alhilaal Tehoru
+              </span>
+            </div>
+          </div>
+
+          {/* Header Action Buttons */}
+          <div className="flex items-center space-x-3">
+            {currentScreen === 'exam' && (
+              <div className="flex items-center space-x-2 bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-lg text-xs">
+                <span className="text-slate-400 hidden sm:inline">Peserta:</span>
+                <span className="font-bold text-sky-400">{studentInfo.name || 'Siswa'}</span>
+                <span className="bg-sky-950 text-sky-300 text-[10px] px-2 py-0.5 rounded font-mono border border-sky-800/50">
+                  {studentInfo.className}
+                </span>
+              </div>
+            )}
+
+            {currentScreen !== 'teacher_dashboard' ? (
+              <button
+                onClick={() => setCurrentScreen('teacher_login')}
+                className="flex items-center space-x-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all hover:border-sky-500/50 shadow-sm"
+              >
+                <Key className="w-3.5 h-3.5 text-sky-400" />
+                <span>Portal Guru</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => setCurrentScreen('landing')}
+                className="flex items-center space-x-1.5 bg-red-950/40 hover:bg-red-900/60 border border-red-800/50 text-red-300 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Keluar Admin</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* MAIN CONTAINER CONTENT */}
+      <main className="flex-1 flex flex-col max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+        
+        {/* SCREEN 1: LANDING & STUDENT ENTRY */}
+        {currentScreen === 'landing' && (
+          <div className="flex-1 flex flex-col justify-center items-center py-6">
+            <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              
+              {/* Left Column: Exam Identity Banner */}
+              <div className="lg:col-span-7 space-y-6 text-left">
+                <div className="inline-flex items-center space-x-2 bg-sky-950/80 border border-sky-500/30 px-3 py-1 rounded-full text-xs font-medium text-sky-400">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  <span>Asesmen Sumatif Semester Ganjil TP 2026/2027</span>
+                </div>
+
+                <div className="space-y-2">
+                  <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                    Evaluasi Hasil Belajar <br />
+                    <span className="bg-gradient-to-r from-sky-400 via-blue-400 to-amber-400 bg-clip-text text-transparent">
+                      Fisika Kelas X
+                    </span>
+                  </h1>
+                  <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
+                    Sistem Ujian Berbasis Komputer (CBT) resmi SMAS Alhilaal Tehoru. Dirancang untuk mengukur pemahaman konsep, angka penting, pengukuran, dan dimensi besaran.
+                  </p>
+                </div>
+
+                {/* Metadata Cards */}
+                <div className="grid grid-cols-2 gap-3 text-xs">
+                  <div className="bg-slate-800/60 border border-slate-700/60 p-3 rounded-xl flex items-center space-x-3">
+                    <div className="p-2 bg-sky-500/10 text-sky-400 rounded-lg">
+                      <UserCheck className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-slate-400 text-[10px] uppercase font-semibold">Guru Pengampu</div>
+                      <div className="font-bold text-slate-200">Yusfyani Rahawarin, S.Pd.</div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-800/60 border border-slate-700/60 p-3 rounded-xl flex items-center space-x-3">
+                    <div className="p-2 bg-amber-500/10 text-amber-400 rounded-lg">
+                      <Clock className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <div className="text-slate-400 text-[10px] uppercase font-semibold">Durasi & Soal</div>
+                      <div className="font-bold text-slate-200">90 Menit (40 Soal PG)</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Materials Covered Badges */}
+                <div className="space-y-2">
+                  <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider block">Materi Ujian (40 Nomor):</span>
+                  <div className="flex flex-wrap gap-2">
+                    {["1. Besaran & Satuan (10 Soal)", "2. Angka Penting (10 Soal)", "3. Pengukuran (10 Soal)", "4. Dimensi Besaran (10 Soal)"].map((m, i) => (
+                      <span key={i} className="bg-slate-800/80 border border-slate-700 text-slate-300 text-xs px-2.5 py-1 rounded-md font-medium">
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Student Form Card */}
+              <div className="lg:col-span-5 bg-slate-800/80 border border-slate-700 p-6 rounded-2xl shadow-2xl backdrop-blur-sm relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl -mr-10 -mt-10 pointer-events-none"></div>
+                
+                <h2 className="text-lg font-bold text-white mb-1 flex items-center space-x-2">
+                  <Award className="w-5 h-5 text-sky-400" />
+                  <span>Login Peserta Ujian</span>
+                </h2>
+                <p className="text-xs text-slate-400 mb-5">
+                  Isi formulir identitas dengan teliti sebelum memasuki ruang ujian digital.
+                </p>
+
+                {loginError && (
+                  <div className="mb-4 p-3 bg-red-950/60 border border-red-800/60 text-red-300 text-xs rounded-xl flex items-start space-x-2 animate-fadeIn">
+                    <AlertTriangle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                    <span>{loginError}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handleStudentLoginSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">Nama Lengkap Peserta</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Contoh: Ahmad Dahlan"
+                      value={studentInfo.name}
+                      onChange={e => setStudentInfo({ ...studentInfo, name: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">Kelas</label>
+                      <select
+                        value={studentInfo.className}
+                        onChange={e => setStudentInfo({ ...studentInfo, className: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-sm text-white focus:outline-none focus:border-sky-500 transition-all"
+                      >
+                        <option value="X-1">X-1 (Fisika)</option>
+                        <option value="X-2">X-2 (Fisika)</option>
+                        <option value="X-3">X-3 (Fisika)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">No. Absen</label>
+                      <input
+                        type="number"
+                        required
+                        placeholder="01"
+                        value={studentInfo.absentNo}
+                        onChange={e => setStudentInfo({ ...studentInfo, absentNo: e.target.value })}
+                        className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="block text-xs font-semibold text-slate-300">Token Ujian</label>
+                      <span className="text-[10px] text-amber-400 font-medium">Default: {activeToken}</span>
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Masukkan Token Guru"
+                      value={studentInfo.tokenInput}
+                      onChange={e => setStudentInfo({ ...studentInfo, tokenInput: e.target.value })}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm font-mono tracking-wider text-amber-300 uppercase placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-all"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-sky-500/25 flex items-center justify-center space-x-2 mt-2"
+                  >
+                    <span>VERIFIKASI & MASUK UJIAN</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </form>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN 2: TATA TERTIB / RULES CONFIRMATION */}
+        {currentScreen === 'rules' && (
+          <div className="max-w-3xl mx-auto my-auto w-full bg-slate-800 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl">
+            <div className="flex items-center space-x-3 border-b border-slate-700 pb-4 mb-6">
+              <div className="p-3 bg-amber-500/10 text-amber-400 rounded-xl">
+                <FileText className="w-6 h-6" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">Tata Tertib Asesmen Sumatif</h2>
+                <p className="text-xs text-slate-400">Bacalah petunjuk pengerjaan di bawah ini dengan seksama sebelum memulai.</p>
+              </div>
+            </div>
+
+            <div className="space-y-3 mb-8 text-xs sm:text-sm text-slate-300">
+              {[
+                "1. Peserta didik wajib mengisi identitas (Nama, Kelas, No. Absen) secara benar dan jujur.",
+                "2. Ujian dikerjakan secara mandiri tanpa bantuan alat bantu tidak sah maupun kerja sama.",
+                "3. Alokasi waktu ujian adalah 90 Menit terhitung sejak tombol 'Saya Siap' diklik.",
+                "4. Jumlah soal sebanyak 40 nomor Pilihan Ganda dengan 5 pilihan jawaban (A, B, C, D, E).",
+                "5. Nilai maksimum adalah 100 dengan bobot 2,5 poin untuk setiap jawaban benar.",
+                "6. Peserta bebas berpindah nomor soal dan menandai ragu-ragu sebelum waktu berakhir.",
+                "7. Jawaban tersimpan otomatis pada server secara berkala.",
+                "8. Hindari memperbarui (refresh) berlebihan atau menutup browser untuk menjaga stabilitas sisa waktu.",
+                "9. Jika timer 90 menit habis, sistem CBT akan mengumpulkan jawaban peserta secara otomatis.",
+                "10. Pengumpulan jawaban bersifat final dan tidak dapat diubah kembali."
+              ].map((rule, idx) => (
+                <div key={idx} className="flex items-start space-x-2 bg-slate-900/50 p-2.5 rounded-lg border border-slate-700/50">
+                  <CheckCircle2 className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+                  <span>{rule}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-700">
+              <button
+                onClick={() => setCurrentScreen('landing')}
+                className="w-full sm:w-auto px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-xl text-xs font-semibold transition-all"
+              >
+                Kembali ke Form Login
+              </button>
+
+              <button
+                onClick={handleStartExam}
+                className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-extrabold rounded-xl text-sm transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center space-x-2"
+              >
+                <span>SAYA SIAP MENGERJAKAN UJIAN</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN 3: INTERACTIVE CBT EXAM ENGINE */}
+        {currentScreen === 'exam' && (
+          <div className="flex-1 flex flex-col space-y-4">
+            {/* Exam Navigation & Header Bar */}
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg">
+              <div className="flex items-center space-x-4 w-full sm:w-auto">
+                <div className="bg-slate-900 px-3 py-2 rounded-xl border border-slate-700 text-center min-w-[70px]">
+                  <span className="block text-[10px] uppercase font-bold text-slate-400">Soal Ke</span>
+                  <span className="text-xl font-extrabold text-sky-400">{currentQuestionIdx + 1} / 40</span>
+                </div>
+
+                <div>
+                  <div className="text-xs text-slate-400 font-medium">Domain Materi:</div>
+                  <div className="text-sm font-bold text-white">
+                    {BANK_SOAL[currentQuestionIdx].domain}
+                  </div>
+                  <div className="inline-block mt-0.5 text-[10px] font-semibold px-2 py-0.5 bg-slate-700 text-amber-300 rounded">
+                    Tingkat: {BANK_SOAL[currentQuestionIdx].difficulty}
+                  </div>
+                </div>
+              </div>
+
+              {/* Timer Bar */}
+              <div className="flex items-center space-x-4 w-full sm:w-auto justify-end">
+                <div className={`flex items-center space-x-2 px-4 py-2 rounded-xl border font-mono font-bold text-lg shadow-inner ${
+                  timeLeft < 300 
+                    ? 'bg-red-950/80 border-red-700 text-red-400 animate-pulse' 
+                    : timeLeft < 900 
+                    ? 'bg-amber-950/80 border-amber-700 text-amber-400' 
+                    : 'bg-slate-900 border-slate-700 text-sky-400'
+                }`}>
+                  <Clock className="w-5 h-5" />
+                  <span>{formatTime(timeLeft)}</span>
+                </div>
+
+                <button
+                  onClick={() => setShowSubmitModal(true)}
+                  className="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-600/20"
+                >
+                  Selesai Ujian
+                </button>
+              </div>
+            </div>
+
+            {/* Exam Body Grid Layout */}
+            <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6">
+              
+              {/* Question Area (8 Cols) */}
+              <div className="lg:col-span-8 bg-slate-800 border border-slate-700 rounded-2xl p-6 flex flex-col justify-between shadow-xl">
+                <div>
+                  {/* Progress Indicator */}
+                  <div className="w-full bg-slate-900 rounded-full h-1.5 mb-6 overflow-hidden">
+                    <div 
+                      className="bg-sky-500 h-1.5 rounded-full transition-all duration-300"
+                      style={{ width: `${((Object.keys(answers).length) / 40) * 100}%` }}
+                    ></div>
+                  </div>
+
+                  {/* Question Text */}
+                  <div className="mb-6 space-y-4">
+                    <h3 className="text-base sm:text-lg font-medium text-slate-100 leading-relaxed">
+                      {BANK_SOAL[currentQuestionIdx].question}
+                    </h3>
+                  </div>
+
+                  {/* Options List */}
+                  <div className="space-y-3">
+                    {BANK_SOAL[currentQuestionIdx].options.map((opt, optIdx) => {
+                      const isSelected = answers[BANK_SOAL[currentQuestionIdx].id] === optIdx;
+                      return (
+                        <button
+                          key={optIdx}
+                          onClick={() => handleSelectOption(BANK_SOAL[currentQuestionIdx].id, optIdx)}
+                          className={`w-full text-left p-4 rounded-xl border transition-all text-xs sm:text-sm flex items-start space-x-3 ${
+                            isSelected
+                              ? 'bg-sky-950/70 border-sky-500 text-white shadow-md shadow-sky-500/10 font-medium'
+                              : 'bg-slate-900/60 border-slate-700/80 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600'
+                          }`}
+                        >
+                          <div className={`h-5 w-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold ${
+                            isSelected ? 'border-sky-400 bg-sky-500 text-slate-950' : 'border-slate-600 text-slate-400'
+                          }`}>
+                            {String.fromCharCode(65 + optIdx)}
+                          </div>
+                          <span className="flex-1">{opt}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Question Control Actions Footer */}
+                <div className="flex items-center justify-between pt-6 border-t border-slate-700/80 mt-6">
+                  <button
+                    disabled={currentQuestionIdx === 0}
+                    onClick={() => setCurrentQuestionIdx(prev => prev - 1)}
+                    className="flex items-center space-x-1.5 bg-slate-700 hover:bg-slate-600 disabled:opacity-40 disabled:cursor-not-allowed text-slate-200 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>Sebelumnya</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleToggleFlag(BANK_SOAL[currentQuestionIdx].id)}
+                    className={`flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold border transition-all ${
+                      flagged[BANK_SOAL[currentQuestionIdx].id]
+                        ? 'bg-amber-500/20 border-amber-500 text-amber-300'
+                        : 'bg-slate-900 border-slate-700 text-slate-400 hover:text-slate-200'
+                    }`}
+                  >
+                    <AlertTriangle className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Ragu-Ragu</span>
+                  </button>
+
+                  <button
+                    disabled={currentQuestionIdx === BANK_SOAL.length - 1}
+                    onClick={() => setCurrentQuestionIdx(prev => prev + 1)}
+                    className="flex items-center space-x-1.5 bg-sky-600 hover:bg-sky-500 disabled:opacity-40 disabled:cursor-not-allowed text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-sky-600/20"
+                  >
+                    <span>Berikutnya</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Sidebar Question Palette Grid (4 Cols) */}
+              <div className="lg:col-span-4 bg-slate-800 border border-slate-700 rounded-2xl p-5 flex flex-col justify-between shadow-xl">
+                <div>
+                  <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4 flex items-center justify-between">
+                    <span>Navigasi Nomor Soal</span>
+                    <span className="text-sky-400 font-mono">{Object.keys(answers).length}/40 Dijawab</span>
+                  </h4>
+
+                  {/* Indicators Legend */}
+                  <div className="grid grid-cols-3 gap-2 text-[10px] mb-4 p-2.5 bg-slate-900/60 rounded-xl border border-slate-700/50">
+                    <div className="flex items-center space-x-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-slate-700"></div>
+                      <span className="text-slate-400">Belum</span>
+                    </div>
+                    <div className="flex items-center space-x-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-sky-500"></div>
+                      <span className="text-slate-300">Dijawab</span>
+                    </div>
+                    <div className="flex items-center space-x-1.5">
+                      <div className="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                      <span className="text-amber-400">Ragu</span>
+                    </div>
+                  </div>
+
+                  {/* 40 Question Grid Buttons */}
+                  <div className="grid grid-cols-5 sm:grid-cols-8 lg:grid-cols-5 gap-2 max-h-[340px] overflow-y-auto pr-1">
+                    {BANK_SOAL.map((q, idx) => {
+                      const isAnswered = answers[q.id] !== undefined;
+                      const isFlagged = flagged[q.id];
+                      const isCurrent = currentQuestionIdx === idx;
+
+                      let btnStyle = "bg-slate-900 border-slate-700 text-slate-400 hover:border-slate-500";
+                      if (isFlagged) {
+                        btnStyle = "bg-amber-500/20 border-amber-500 text-amber-300 font-bold";
+                      } else if (isAnswered) {
+                        btnStyle = "bg-sky-600 border-sky-500 text-white font-bold shadow-sm shadow-sky-600/30";
+                      }
+
+                      return (
+                        <button
+                          key={q.id}
+                          onClick={() => setCurrentQuestionIdx(idx)}
+                          className={`h-9 rounded-lg text-xs font-medium border flex items-center justify-center transition-all ${btnStyle} ${
+                            isCurrent ? 'ring-2 ring-white ring-offset-2 ring-offset-slate-800' : ''
+                          }`}
+                        >
+                          {idx + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-700/80 mt-4">
+                  <button
+                    onClick={() => setShowSubmitModal(true)}
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl text-xs font-bold transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center space-x-2"
+                  >
+                    <CheckCircle className="w-4 h-4" />
+                    <span>SELESAI & KUMPULKAN UJIAN</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* CONFIRMATION SUBMIT MODAL */}
+        {showSubmitModal && (
+          <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl max-w-md w-full p-6 space-y-5 shadow-2xl animate-scaleUp">
+              <div className="flex items-center space-x-3 text-amber-400">
+                <AlertTriangle className="w-7 h-7" />
+                <h3 className="text-lg font-bold text-white">Konfirmasi Pengumpulan</h3>
+              </div>
+
+              <div className="bg-slate-900 p-4 rounded-xl border border-slate-700/70 text-xs space-y-2 text-slate-300">
+                <div className="flex justify-between">
+                  <span>Total Soal:</span>
+                  <span className="font-bold text-white">40 Nomor</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Soal Dijawab:</span>
+                  <span className="font-bold text-sky-400">{Object.keys(answers).length} Nomor</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Belum Dijawab:</span>
+                  <span className="font-bold text-red-400">{40 - Object.keys(answers).length} Nomor</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Status Ragu-Ragu:</span>
+                  <span className="font-bold text-amber-400">{Object.values(flagged).filter(Boolean).length} Nomor</span>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-400">
+                Apakah Anda yakin ingin menyelesaikan ujian sekarang? Jawaban yang dikumpulkan bersifat final dan tidak dapat diubah kembali.
+              </p>
+
+              <div className="flex items-center space-x-3 pt-2">
+                <button
+                  onClick={() => setShowSubmitModal(false)}
+                  className="flex-1 bg-slate-700 hover:bg-slate-600 text-slate-300 py-2.5 rounded-xl text-xs font-semibold transition-all"
+                >
+                  Batal / Periksa Lagi
+                </button>
+                <button
+                  onClick={calculateAndFinishExam}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-600/30"
+                >
+                  Ya, Kumpulkan Now
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN 4: STUDENT EXAM RESULT & CERTIFICATE */}
+        {currentScreen === 'result' && examSubmittedTime && (
+          <div className="max-w-3xl mx-auto w-full space-y-6 py-4">
+            
+            {/* Print Header Visible in Print Mode */}
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden print:bg-white print:text-black print:border-none print:shadow-none">
+              
+              {/* Card Banner Background Accent */}
+              <div className="absolute top-0 right-0 w-48 h-48 bg-sky-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+
+              <div className="text-center space-y-2 border-b border-slate-700/80 pb-6 mb-6">
+                <div className="inline-flex items-center space-x-2 bg-emerald-950/80 border border-emerald-500/40 px-3 py-1 rounded-full text-xs font-medium text-emerald-400 mb-2">
+                  <CheckCircle className="w-3.5 h-3.5" />
+                  <span>Ujian Berhasil Dikumpulkan</span>
+                </div>
+                <h2 className="text-2xl font-extrabold text-white">Laporan Hasil Asesmen Sumatif</h2>
+                <p className="text-xs text-slate-400">SMAS Alhilaal Tehoru • TP 2026/2027 • Fisika Kelas X</p>
+              </div>
+
+              {/* Student Metadata Table */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-700/60 text-xs mb-6">
+                <div>
+                  <span className="text-slate-400 block text-[10px] uppercase font-semibold">Nama Peserta</span>
+                  <span className="font-bold text-white text-sm">{examSubmittedTime.name}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[10px] uppercase font-semibold">Kelas / Absen</span>
+                  <span className="font-bold text-sky-400 text-sm">{examSubmittedTime.className} (No. {examSubmittedTime.absentNo})</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[10px] uppercase font-semibold">Waktu Selesai</span>
+                  <span className="font-bold text-slate-200">{examSubmittedTime.timestamp}</span>
+                </div>
+                <div>
+                  <span className="text-slate-400 block text-[10px] uppercase font-semibold">Lama Pengerjaan</span>
+                  <span className="font-bold text-slate-200">{examSubmittedTime.timeSpent}</span>
+                </div>
+              </div>
+
+              {/* Main Score Hero Card */}
+              <div className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-700 p-6 rounded-2xl text-center space-y-3 mb-6 relative shadow-inner">
+                <span className="text-xs uppercase tracking-widest text-slate-400 font-semibold">NILAI AKHIR ASESMEN</span>
+                <div className="text-5xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-blue-400 to-amber-400">
+                  {examSubmittedTime.score.toFixed(1)}
+                </div>
+                <div className="inline-block bg-sky-950/80 border border-sky-500/30 text-sky-300 text-xs font-bold px-4 py-1.5 rounded-full">
+                  PREDIKAT: {examSubmittedTime.predikat.toUpperCase()}
+                </div>
+              </div>
+
+              {/* Breakdown Grid Stats */}
+              <div className="grid grid-cols-3 gap-3 text-center mb-6">
+                <div className="bg-emerald-950/30 border border-emerald-800/40 p-3 rounded-xl">
+                  <span className="block text-[10px] text-emerald-400 font-semibold uppercase">Jawaban Benar</span>
+                  <span className="text-xl font-extrabold text-emerald-300">{examSubmittedTime.correctCount}</span>
+                </div>
+
+                <div className="bg-red-950/30 border border-red-800/40 p-3 rounded-xl">
+                  <span className="block text-[10px] text-red-400 font-semibold uppercase">Jawaban Salah</span>
+                  <span className="text-xl font-extrabold text-red-300">{examSubmittedTime.wrongCount}</span>
+                </div>
+
+                <div className="bg-slate-900/60 border border-slate-700/60 p-3 rounded-xl">
+                  <span className="block text-[10px] text-slate-400 font-semibold uppercase">Tidak Dijawab</span>
+                  <span className="text-xl font-extrabold text-slate-300">{examSubmittedTime.unansweredCount}</span>
+                </div>
+              </div>
+
+              {/* Topic Performance Bar */}
+              <div className="space-y-3 mb-6">
+                <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Capaian Per Domain Materi:</h4>
+                {Object.entries(examSubmittedTime.domainScores).map(([domain, score], i) => (
+                  <div key={i} className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-slate-300">{domain}</span>
+                      <span className="font-bold text-sky-400">{score}%</span>
+                    </div>
+                    <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                      <div 
+                        className="bg-sky-500 h-2 rounded-full transition-all"
+                        style={{ width: `${score}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Teacher Signature Stamp Notice */}
+              <div className="pt-6 border-t border-slate-700/80 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-400 gap-4">
+                <div>
+                  <p>Guru Mata Pelajaran Fisika:</p>
+                  <p className="font-bold text-slate-200 text-sm mt-1">Yusfyani Rahawarin, S.Pd.</p>
+                </div>
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => window.print()}
+                    className="flex items-center space-x-1.5 bg-sky-600 hover:bg-sky-500 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-md shadow-sky-600/20"
+                  >
+                    <Printer className="w-4 h-4" />
+                    <span>Cetak Hasil Ujian</span>
+                  </button>
+
+                  <button
+                    onClick={() => setCurrentScreen('landing')}
+                    className="bg-slate-700 hover:bg-slate-600 text-slate-200 px-4 py-2 rounded-xl font-semibold transition-all"
+                  >
+                    Selesai
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
+
+        {/* SCREEN 5: TEACHER ADMIN LOGIN */}
+        {currentScreen === 'teacher_login' && (
+          <div className="max-w-md mx-auto my-auto w-full bg-slate-800 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
+            <div className="text-center space-y-2">
+              <div className="h-12 w-12 bg-sky-500/10 text-sky-400 rounded-2xl mx-auto flex items-center justify-center border border-sky-500/20">
+                <Key className="w-6 h-6" />
+              </div>
+              <h2 className="text-xl font-bold text-white">Autentikasi Portal Guru</h2>
+              <p className="text-xs text-slate-400">Khusus Guru Fisika: Yusfyani Rahawarin, S.Pd.</p>
+            </div>
+
+            {teacherAuthError && (
+              <div className="p-3 bg-red-950/60 border border-red-800 text-red-300 text-xs rounded-xl flex items-center space-x-2">
+                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                <span>{teacherAuthError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleTeacherAuth} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1">PIN / Password Akses Admin</label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Masukkan PIN (Default: guru123)"
+                  value={teacherPin}
+                  onChange={e => setTeacherPin(e.target.value)}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-sky-500"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-3 rounded-xl text-sm transition-all shadow-lg shadow-sky-600/25 flex items-center justify-center space-x-2"
+              >
+                <span>MASUK DASHBOARD GURU</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </form>
+
+            <button
+              onClick={() => setCurrentScreen('landing')}
+              className="w-full text-center text-xs text-slate-400 hover:text-slate-200 font-medium"
+            >
+              ← Kembali ke Beranda Halaman Depan
+            </button>
+          </div>
+        )}
+
+        {/* SCREEN 6: TEACHER DASHBOARD & ANALYTICS PORTAL */}
+        {currentScreen === 'teacher_dashboard' && (
+          <div className="flex-1 flex flex-col space-y-6">
+            
+            {/* Top Bar Dashboard Summary Header */}
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-xl">
+              <div>
+                <div className="inline-flex items-center space-x-2 bg-sky-950/80 border border-sky-500/30 px-3 py-1 rounded-full text-xs font-medium text-sky-400 mb-1">
+                  <UserCheck className="w-3.5 h-3.5" />
+                  <span>Guru Fisika: Yusfyani Rahawarin, S.Pd.</span>
+                </div>
+                <h2 className="text-2xl font-extrabold text-white">Dashboard Laporan & Analisis Asesmen</h2>
+                <p className="text-xs text-slate-400">SMAS Alhilaal Tehoru • Semester Ganjil Fisika Kelas X</p>
+              </div>
+
+              {/* Admin Actions */}
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  onClick={exportToCSV}
+                  className="flex items-center space-x-1.5 bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-md shadow-emerald-600/20"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Ekspor Data (Excel/CSV)</span>
+                </button>
+
+                <button
+                  onClick={() => window.print()}
+                  className="flex items-center space-x-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all"
+                >
+                  <Printer className="w-4 h-4" />
+                  <span>Cetak Laporan</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Stats Grid Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="bg-slate-800 border border-slate-700 p-4 rounded-2xl space-y-1 shadow-lg">
+                <div className="text-slate-400 text-[10px] font-bold uppercase">Total Peserta Ujian</div>
+                <div className="text-3xl font-black text-white">{completedExams.length} <span className="text-xs text-slate-400 font-normal">Siswa</span></div>
+                <div className="text-[10px] text-emerald-400 font-medium">Tersimpan di Server</div>
+              </div>
+
+              <div className="bg-slate-800 border border-slate-700 p-4 rounded-2xl space-y-1 shadow-lg">
+                <div className="text-slate-400 text-[10px] font-bold uppercase">Rata-Rata Nilai Kelas</div>
+                <div className="text-3xl font-black text-sky-400">{analyticsData.avgScore}</div>
+                <div className="text-[10px] text-slate-400">Skala 0 - 100</div>
+              </div>
+
+              <div className="bg-slate-800 border border-slate-700 p-4 rounded-2xl space-y-1 shadow-lg">
+                <div className="text-slate-400 text-[10px] font-bold uppercase">Nilai Tertinggi / Terendah</div>
+                <div className="text-2xl font-black text-emerald-400">{analyticsData.highest} <span className="text-slate-500 text-base font-normal">/</span> <span className="text-red-400">{analyticsData.lowest}</span></div>
+                <div className="text-[10px] text-slate-400">Perolehan Siswa</div>
+              </div>
+
+              <div className="bg-slate-800 border border-slate-700 p-4 rounded-2xl space-y-1 shadow-lg">
+                <div className="text-slate-400 text-[10px] font-bold uppercase">Ketuntasan KKTP ({kktpScore})</div>
+                <div className="text-3xl font-black text-amber-400">
+                  {completedExams.length ? Math.round((analyticsData.passedCount / completedExams.length) * 100) : 0}%
+                </div>
+                <div className="text-[10px] text-slate-400">{analyticsData.passedCount} Tuntas • {analyticsData.failedCount} Remedial</div>
+              </div>
+            </div>
+
+            {/* Exam Controller & Token Settings Card */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              <div className="lg:col-span-4 bg-slate-800 border border-slate-700 p-5 rounded-2xl space-y-4 shadow-xl">
+                <h3 className="text-sm font-bold text-white flex items-center space-x-2">
+                  <Settings className="w-4 h-4 text-sky-400" />
+                  <span>Pengaturan Akses & KKTP Ujian</span>
+                </h3>
+
+                <div className="space-y-3 text-xs">
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Token Ujian Aktif</label>
+                    <div className="flex space-x-2">
+                      <input
+                        type="text"
+                        value={activeToken}
+                        onChange={e => setActiveToken(e.target.value.toUpperCase())}
+                        className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 font-mono font-bold text-amber-300 uppercase"
+                      />
+                      <button
+                        onClick={() => setActiveToken(`PHYS${Math.floor(10 + Math.random() * 90)}`)}
+                        className="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-2 rounded-xl font-medium"
+                      >
+                        Acak
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-slate-300 font-semibold mb-1">Batas Kriteria Ketuntasan (KKTP)</label>
+                    <input
+                      type="number"
+                      value={kktpScore}
+                      onChange={e => setKktpScore(Number(e.target.value))}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 font-bold text-white"
+                    />
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-700/80 space-y-2">
+                    <label className="flex items-center justify-between text-slate-300 cursor-pointer">
+                      <span>Status Sistem Ujian</span>
+                      <input
+                        type="checkbox"
+                        checked={isExamActive}
+                        onChange={e => setIsExamActive(e.target.checked)}
+                        className="h-4 w-4 rounded accent-sky-500"
+                      />
+                    </label>
+
+                    <label className="flex items-center justify-between text-slate-300 cursor-pointer">
+                      <span>Izinkan Siswa Melihat Pembahasan</span>
+                      <input
+                        type="checkbox"
+                        checked={allowReviewKey}
+                        onChange={e => setAllowReviewKey(e.target.checked)}
+                        className="h-4 w-4 rounded accent-sky-500"
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              {/* Topic Performance Mastery Bars */}
+              <div className="lg:col-span-8 bg-slate-800 border border-slate-700 p-5 rounded-2xl space-y-4 shadow-xl">
+                <h3 className="text-sm font-bold text-white flex items-center space-x-2">
+                  <BarChart2 className="w-4 h-4 text-sky-400" />
+                  <span>Analisis Penguasaan Materi (4 Domain Fisika Kelas X)</span>
+                </h3>
+
+                <div className="space-y-4 pt-1">
+                  {Object.entries(analyticsData.domainAverages).map(([domainName, avgVal], i) => (
+                    <div key={i} className="space-y-1.5">
+                      <div className="flex justify-between text-xs font-semibold">
+                        <span className="text-slate-200">{domainName}</span>
+                        <span className="text-sky-400">{avgVal}% Rata-Rata Capaian</span>
+                      </div>
+                      <div className="w-full bg-slate-900 rounded-full h-3 overflow-hidden p-0.5 border border-slate-700/50">
+                        <div
+                          className={`h-full rounded-full transition-all duration-500 ${
+                            Number(avgVal) >= kktpScore ? 'bg-gradient-to-r from-sky-500 to-emerald-500' : 'bg-gradient-to-r from-amber-500 to-red-500'
+                          }`}
+                          style={{ width: `${avgVal}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Student Score List Table */}
+            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-5 shadow-xl space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h3 className="text-sm font-bold text-white flex items-center space-x-2">
+                  <Users className="w-4 h-4 text-sky-400" />
+                  <span>Daftar Perolehan Nilai Peserta Didik</span>
+                </h3>
+
+                <div className="text-xs text-slate-400">
+                  Menampilkan {completedExams.length} Data Hasil
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="bg-slate-900/80 text-slate-400 border-b border-slate-700 uppercase font-semibold">
+                      <th className="p-3">No</th>
+                      <th className="p-3">Nama Lengkap</th>
+                      <th className="p-3">Kelas</th>
+                      <th className="p-3">No. Absen</th>
+                      <th className="p-3">Benar / Salah</th>
+                      <th className="p-3 text-right">Nilai Akhir</th>
+                      <th className="p-3">Predikat</th>
+                      <th className="p-3">Status KKTP</th>
+                      <th className="p-3 text-right">Waktu</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-700/60">
+                    {completedExams.map((exam, index) => {
+                      const isPassed = exam.score >= kktpScore;
+                      return (
+                        <tr key={exam.id} className="hover:bg-slate-700/30 transition-all">
+                          <td className="p-3 font-mono text-slate-500">{index + 1}</td>
+                          <td className="p-3 font-bold text-white">{exam.name}</td>
+                          <td className="p-3 text-sky-400 font-semibold">{exam.className}</td>
+                          <td className="p-3 text-slate-300">{exam.absentNo}</td>
+                          <td className="p-3">
+                            <span className="text-emerald-400 font-bold">{exam.correctCount}</span> / <span className="text-red-400">{exam.wrongCount}</span>
+                          </td>
+                          <td className="p-3 text-right font-black text-sm text-sky-300">
+                            {exam.score.toFixed(1)}
+                          </td>
+                          <td className="p-3">
+                            <span className="px-2 py-0.5 rounded bg-slate-900 border border-slate-700 text-[10px] text-slate-300 font-medium">
+                              {exam.predikat}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            {isPassed ? (
+                              <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-bold">
+                                TUNTAS
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded bg-red-950 text-red-400 border border-red-800 text-[10px] font-bold">
+                                REMEDIAL
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-3 text-right text-slate-400 text-[10px] font-mono">
+                            {exam.timestamp}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Remedial Focus Recommendations */}
+            <div className="bg-slate-800 border border-slate-700 p-5 rounded-2xl shadow-xl space-y-3">
+              <h3 className="text-sm font-bold text-amber-400 flex items-center space-x-2">
+                <ShieldAlert className="w-4 h-4" />
+                <span>Rekomendasi Pembelajaran Remedial</span>
+              </h3>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Berdasarkan hasil asesmen, peserta didik dengan nilai di bawah kriteria ketuntasan ({kktpScore}) disarankan untuk mengikuti bimbingan ulang pada domain materi dengan capaian rata-rata terendah.
+              </p>
+            </div>
+
+          </div>
+        )}
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-slate-950 border-t border-slate-800 py-4 text-center text-xs text-slate-500 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div>
+            PHYSICS CBT v2.4 • SMAS Alhilaal Tehoru TP 2026/2027
+          </div>
+          <div>
+            Pengembang & Guru: <span className="text-slate-300 font-medium">Yusfyani Rahawarin, S.Pd.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
